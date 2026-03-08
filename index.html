@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Flipbook for Jerry ✨</title>
+    <style>
+        :root {
+            --bg-color: #fceef5;
+            --page-color: #ffffff;
+            --accent-pink: #ffafcc;
+            --accent-blue: #bde0fe;
+            --text-color: #4a4a4a;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Game Awal */
+        #start-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .btn-game {
+            padding: 12px 28px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            background: white;
+            color: #ff8fab;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        /* Flipbook */
+        .book-container { perspective: 1500px; display: none; }
+        .book { width: 350px; height: 500px; position: relative; transform-style: preserve-3d; }
+
+        .page {
+            width: 100%; height: 100%;
+            background-color: var(--page-color);
+            position: absolute; top: 0; left: 0;
+            transform-origin: left;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+            border-radius: 0 15px 15px 0;
+            padding: 30px; box-sizing: border-box;
+            box-shadow: inset 3px 0 10px rgba(0,0,0,0.05), 5px 5px 15px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            backface-visibility: hidden;
+        }
+
+        .page.flipped { transform: rotateY(-180deg); }
+
+        .img-container {
+            width: 100%; height: 320px;
+            border-radius: 10px; overflow: hidden;
+            border: 5px solid #fff; margin-bottom: 15px;
+        }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Final Overlay */
+        #final-message {
+            position: fixed; inset: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 3000; animation: fadeIn 1s;
+        }
+
+        #final-message h1 {
+            font-size: 4rem; color: var(--accent-pink);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            z-index: 3001; margin: 0;
+        }
+
+        .floating-heart {
+            position: absolute; color: var(--accent-pink);
+            font-size: 2rem; pointer-events: none;
+            animation: floatUp 3s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        input { padding: 10px; border: 2px solid var(--accent-pink); border-radius: 10px; width: 60px; text-align: center; }
+        canvas { position: fixed; inset: 0; pointer-events: none; z-index: 2000; }
+    </style>
+</head>
+<body>
+
+    <div id="start-overlay">
+        <h2>Special Gift for Jerry ✨</h2>
+        <p>Klik tombol 5x untuk buka bukunya!</p>
+        <button class="btn-game" id="init-btn">Klik Aku! ❤️</button>
+    </div>
+
+    <div id="final-message">
+        <h1>I LOVE YOU</h1>
+        <p style="font-size: 1.5rem;">❤️✨🌹✨❤️</p>
+    </div>
+
+    <canvas id="fireworks"></canvas>
+
+    <div class="book-container" id="container">
+        <div class="book">
+            <div class="page" style="z-index: 14;" onclick="flip(this)">
+                <h1 style="color: var(--accent-pink); font-size: 1.8rem; text-align:center;">HAPPY BIRTHDAY JERRY! 🎂</h1>
+                <p>Press to open my love...</p>
+                <div style="margin-top: 30px; font-size: 2rem;">🎁</div>
+            </div>
+
+            <div class="page" style="z-index: 13;" onclick="flip(this)">
+                <div class="img-container">
+                    <img src="https://i.ibb.co.com/dwTsF6FL/Proyek-Baru-95-F649329.png">
+                </div>
+                <p>Happy Birthday Jerry sayang, I am so grateful to know you, really, I am so very happy that you are with me..</p>
+            </div>
+
+            <div class="page" style="z-index: 12;" onclick="flip(this)">
+                <p>Every moment we go through, it all means something to me, I love you more than I love myself, Jerry... I really hope we will know each other longer, as long as possible. I hope you know that I am very happy to have known you, it has been almost a year and I am still very happy about this. Hopefully in whatever life we live, we will know each other, maybe when we are reincarnated as animals, objects, plants, we will always be side by side. .</p>
+            </div>
+
+            <div class="page" style="z-index: 11;" onclick="flip(this)">
+                <div class="img-container">
+                    <img src="https://i.ibb.co.com/bMm222P1/Proyek-Baru-95-D10972-E.png">
+                </div>
+                <p>Always be the good and cute Jerry. Jangan kecapean osis osisannya, badan kecil Jeyi butuh istirahat, Jangan maksain hal hal yang gabagus untuk dipaksain, nanti kalo kecapean, nangis nangis gimana? Padahal cuma gua yang boleh bikin Jeyi nangis</p>
+            </div>
+
+            <div class="page" style="z-index: 10;" onclick="flip(this)">
+                <p>I will always be here to support you . kalo Jeyi lagi capek dan butuh banyak cerita, Gua ada selalu, Jeyi bebas ceritain apapun karna gua akan dengerin Jeyi sebaik mungkin, Akan gua usahain buat selalu respon baik ke Jeyi entah di cerita Jeyi yang oon, Lucu, Seneng, Sedih, Yang mana aja dahhh.</p>
+            </div>
+
+            <div class="page" style="z-index: 9;" onclick="flip(this)">
+                <div class="img-container">
+                    <img src="https://i.ibb.co.com/SD7grcbj/Proyek-Baru-95-3545940.png">
+                </div>
+                <p>Semoga semua impian Jeyi jadi kenyataan tahun ini. I really want Jeyi to always be happy and always be useful to the people around her. Always be a good, cute and adorable Jeyi because that is the best thing Jeyi should do and get.</p>
+            </div>
+
+            <div class="page" style="z-index: 8;" id="mid-game">
+                <h3>TEBAK DULU! 🧩</h3>
+                <p>7 + 5 berapa hayo? Buat test iq aja bwhahaha</p>
+                <input type="number" id="ans">
+                <button class="btn-game" onclick="checkAns()" style="margin-top:10px; font-size: 0.8rem;">Cek</button>
+            </div>
+
+            <div class="page" style="z-index: 7;" onclick="flip(this)">
+                <h2 style="color: var(--accent-pink);">Deymn kirain turun iqnya</h2>
+                <p>Lanjut wes...</p>
+            </div>
+
+            <div class="page" style="z-index: 6;" onclick="flip(this)">
+                <div class="img-container">
+                    <img src="https://i.ibb.co.com/0yzgHy8X/Proyek-Baru-95-F577079.png">
+                </div>
+                <p>Thank you for making my life so colorful and valuable, every color that Jerry poured into me, like pouring paint on a canvas, it all means something and leaves a mark. All the good things that Jerry gave me, I hope they come back to Jeyi, I really hope Jeyi gets good treatment from everyone, especially as Jeyi gets older.</p>
+            </div>
+
+            <div class="page" style="z-index: 5;" onclick="flip(this)">
+                <p>Stay healthy and stay happy, Jerry.</p>
+            </div>
+
+            <div class="page" style="z-index: 4;" onclick="flip(this)">
+                <div class="img-container">
+                    <img src="https://i.ibb.co.com/tW7zbDT/IMG-20260308-110912-688.png">
+                </div>
+                <p>You are truly special to me.</p>
+            </div>
+
+            <div class="page" style="z-index: 3;" onclick="flip(this)">
+                <p>Halaman terakhir nih...</p>
+            </div>
+
+            <div class="page" style="z-index: 2;" onclick="flip(this)">
+                <h2 style="color: var(--accent-pink);">Jawab Jujur...</h2>
+            </div>
+
+            <div class="page" style="z-index: 1;">
+                <h2 style="color: var(--accent-pink); text-align: center; margin-bottom: 25px;">JERRY SAYANG GUA GA? </h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-game" onclick="finalSurprise()" style="background: var(--accent-pink); color: white;">SAYANG</button>
+                    <button class="btn-game" onclick="finalSurprise()" style="background: var(--accent-blue); color: white;">SAYANG BANGET</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Start Logic
+        let c = 0;
+        document.getElementById('init-btn').onclick = (e) => {
+            c++;
+            if(c >= 5) {
+                document.getElementById('start-overlay').style.display = 'none';
+                document.getElementById('container').style.display = 'block';
+            } else {
+                e.target.innerText = `Klik ${5-c}x lagi!`;
+                e.target.style.transform = `scale(${1 + c*0.1})`;
+            }
+        };
+
+        function flip(el) {
+            el.classList.add('flipped');
+            setTimeout(() => el.style.zIndex = 0, 600);
+        }
+
+        function checkAns() {
+            if(document.getElementById('ans').value == "12") {
+                const pg = document.getElementById('mid-game');
+                pg.classList.add('flipped');
+                setTimeout(() => pg.style.zIndex = 0, 600);
+            } else { alert("Hitung lagi dong! "); }
+        }
+
+        // Final Surprise Logic
+        function finalSurprise() {
+            // Munculkan overlay teks gede
+            document.getElementById('final-message').style.display = 'flex';
+            
+            // Luncurkan kembang api canvas
+            launchFireworks();
+
+            // Buat love melayang terus menerus
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.className = 'floating-heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 4000);
+            }, 300);
+        }
+
+        // Fireworks Canvas (White Love)
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        let parts = [];
+
+        function launchFireworks() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            for(let i=0; i<100; i++) {
+                parts.push({
+                    x: canvas.width/2, y: canvas.height/2,
+                    vx: (Math.random()-0.5) * 15, vy: (Math.random()-0.5) * 15,
+                    s: Math.random() * 6 + 2, o: 1
+                });
+            }
+            loop();
+        }
+
+        function loop() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            parts.forEach((p, i) => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.o})`;
+                ctx.fill();
+                p.x += p.vx; p.y += p.vy; p.o -= 0.01;
+                if(p.o <= 0) parts.splice(i, 1);
+            });
+            if(parts.length > 0) requestAnimationFrame(loop);
+        }
+    </script>
+</body>
+</html>
